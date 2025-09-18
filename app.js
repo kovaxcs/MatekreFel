@@ -58,13 +58,13 @@ app.post('/generate-pdf', async (req, res) => {
   res.set('Access-Control-Allow-Credentials', true);
   res.set('Access-Control-Allow-Methods', 'POST');
   res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  const html = req.body;
+  const url = req.body;
 
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 	
   // Load your HTML and wait for assets
-  await page.setContent(html, { waitUntil: 'networkidle0' });
+  await page.goto(url, { waitUntil: 'networkidle0' });
 
   await page.waitForSelector('.ML__math', {timeout: 5000}).catch(() => {
     console.warn("MathLive render element not detected; continuing anyway.");
