@@ -37,9 +37,6 @@ app.get('/', async (req, res) => {
     console.warn("MathLive render element not detected; continuing anyway.");
   });
 
-  await page.waitForFunction(() => {
-	return document.querySelector("#footer") !== null;
-  });
   // Generate PDF
   const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
   await browser.close();
