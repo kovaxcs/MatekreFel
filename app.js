@@ -53,7 +53,7 @@ app.get('/', async (req, res) => {
 });
 
 app.post('/generate-pdf', async (req, res) => {
-	console.log('generate-pdf post')
+  console.log('generate-pdf post')
   res.set('Access-Control-Allow-Origin', '*');
   res.set('Access-Control-Allow-Credentials', true);
   res.set('Access-Control-Allow-Methods', 'POST');
