@@ -32,7 +32,7 @@ app.post('/generate-pdf', async (req, res) => {
   res.set('Access-Control-Allow-Credentials', true);
   res.set('Access-Control-Allow-Methods', 'POST');
   res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  //const html = req.body;
+  const html = req.body;
   //const browser = await puppeteer.launch();
   //const page = await browser.newPage();
 
@@ -48,7 +48,7 @@ app.post('/generate-pdf', async (req, res) => {
   //await browser.close();
 
   //res.set({'Content-Type': 'application/pdf'});
-  res.send("Test");
+  res.send(html);
 });
 
 app.listen(3000, () => console.log('API running on port 3000'));
