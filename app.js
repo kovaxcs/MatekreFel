@@ -41,15 +41,15 @@ app.get('/', async (req, res) => {
   const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
   await browser.close();
 
-  res.set({'Content-Type': 'application/pdf'});
-  res.send(pdfBuffer);
+  //res.set({'Content-Type': 'application/pdf'});
+  //res.send(pdfBuffer);
 
-  //res.writeHead(200, {
-  //  "Content-Type": "application/pdf",
-  //  "Content-Disposition": 'inline; filename="document.pdf"',
-  //  "Content-Length": pdfBuffer.length,
-  //});
-  //res.end(pdfBuffer);
+  res.writeHead(200, {
+    "Content-Type": "application/pdf",
+    "Content-Disposition": 'inline; filename="document.pdf"',
+    "Content-Length": pdfBuffer.length,
+  });
+  res.end(pdfBuffer);
 });
 
 app.post('/generate-pdf', async (req, res) => {
