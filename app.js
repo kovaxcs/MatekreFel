@@ -36,6 +36,8 @@ app.post('/generate-pdf', async (req, res) => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
+	res.send(html);
+	
   // Load your HTML and wait for assets
   await page.setContent(html, { waitUntil: 'networkidle0' });
 
