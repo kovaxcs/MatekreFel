@@ -27,11 +27,11 @@ app.get('/', async (req, res) => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
-  const html = '<html><body><h1>Hello, world!</h1><p>This is a test PDF document.</p></body></html>';
+  //const html = '<html><body><h1>Hello, world!</h1><p>This is a test PDF document.</p></body></html>';
 
-  //await page.goto('https://matekrefel.ro/oldal/Visszajelzes-hatasmeres', { waitUntil: 'networkidle0' });
+  await page.goto('https://matekrefel.ro/oldal/Visszajelzes-hatasmeres', { waitUntil: 'networkidle0' });
   // Load your HTML and wait for assets
-  await page.setContent(html, { waitUntil: 'networkidle0' });
+  //await page.setContent(html, { waitUntil: 'networkidle0' });
 
   // Wait for MathJax if you have LaTeX. Optionally, wait for a JS flag set after rendering:
   //await page.waitForFunction('window.MathJax && MathJax.typesetPromise', {timeout: 5000}).catch(()=>{});
