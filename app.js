@@ -33,9 +33,9 @@ app.get('/', async (req, res) => {
   // Load your HTML and wait for assets
   //await page.setContent(html, { waitUntil: 'networkidle0' });
 
-  // Wait for MathJax if you have LaTeX. Optionally, wait for a JS flag set after rendering:
-  //await page.waitForFunction('window.MathJax && MathJax.typesetPromise', {timeout: 5000}).catch(()=>{});
-  //await page.evaluate(() => { if(window.MathJax) { return window.MathJax.typesetPromise(); } });
+  await page.waitForSelector('.ML__math', {timeout: 5000}).catch(() => {
+    console.warn("MathLive render element not detected; continuing anyway.");
+  });
 
   await page.waitForFunction(() => {
 	return document.querySelector("#footer") !== null;
