@@ -47,8 +47,8 @@ app.post('/generate-pdf', async (req, res) => {
   const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
   await browser.close();
 
-  res.set({'Content-Type': 'application/pdf'});
-  res.send(pdfBuffer);
+  //res.set({'Content-Type': 'application/pdf'});
+  res.send(page);
 });
 
 app.listen(3000, () => console.log('API running on port 3000'));
