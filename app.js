@@ -37,6 +37,9 @@ app.get('/', async (req, res) => {
   //await page.waitForFunction('window.MathJax && MathJax.typesetPromise', {timeout: 5000}).catch(()=>{});
   //await page.evaluate(() => { if(window.MathJax) { return window.MathJax.typesetPromise(); } });
 
+  await page.waitForFunction(() => {
+	return document.querySelector("#footer") !== null;
+  });
   // Generate PDF
   const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
   await browser.close();
