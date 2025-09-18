@@ -22,7 +22,7 @@ app.use(cors({
   origin: '*'
 }));
 
-app.get('/', (req, res) => { 
+app.get('/', async (req, res) => { 
   console.log('get /');
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
