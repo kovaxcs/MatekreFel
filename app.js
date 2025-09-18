@@ -29,7 +29,6 @@ app.get('/', async (req, res) => {
 
   const html = '<html><body><h1>Hello, world!</h1><p>This is a test PDF document.</p></body></html>';
 
-  res.send(html);
   //await page.goto('https://matekrefel.ro/oldal/Visszajelzes-hatasmeres', { waitUntil: 'networkidle0' });
   // Load your HTML and wait for assets
   //await page.setContent(html, { waitUntil: 'networkidle0' });
@@ -39,15 +38,15 @@ app.get('/', async (req, res) => {
   //await page.evaluate(() => { if(window.MathJax) { return window.MathJax.typesetPromise(); } });
 
   // Generate PDF
-  //const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
-  //await browser.close();
+  const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
+  await browser.close();
 
-  //res.writeHead(200, {
-  //  "Content-Type": "application/pdf",
-  //  "Content-Disposition": 'inline; filename="document.pdf"',
-  //  "Content-Length": pdfBuffer.length,
-  //});
-  //res.end(pdfBuffer);
+  res.writeHead(200, {
+    "Content-Type": "application/pdf",
+    "Content-Disposition": 'inline; filename="document.pdf"',
+    "Content-Length": pdfBuffer.length,
+  });
+  res.end(pdfBuffer);
 });
 
 app.post('/generate-pdf', async (req, res) => {
