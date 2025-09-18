@@ -4,18 +4,33 @@ const cors = require('cors');
 const app = express();
 app.use(express.text({type: '*/*', limit: '10mb'})); // receive raw HTML
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
+app.options('/generate-pdf', cors({
+  origin: '*'
+}));
+
 app.use(cors({
-  origin: '*' // or use '*' to allow all, but for security, specify your staging/production URLs
+  origin: '*'
 }));
 
 app.get('/', (req, res) => { 
-  res.send("Teszt2");
+  res.send("Teszt");
 });
 
 app.post('/generate-pdf', async (req, res) => {
+	console.log('generate-pdf post')
   res.set('Access-Control-Allow-Origin', '*');
   res.set('Access-Control-Allow-Credentials', true);
-  res.set('Access-Control-Allow-Methods', 'GET');
+  res.set('Access-Control-Allow-Methods', 'POST');
   res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   const html = req.body;
   const browser = await puppeteer.launch();
