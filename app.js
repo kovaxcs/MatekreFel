@@ -29,7 +29,7 @@ app.get('/', async (req, res) => {
 
   //const html = '<html><body><h1>Hello, world!</h1><p>This is a test PDF document.</p></body></html>';
 
-  await page.goto('https://matekrefel.ro/oldal/Visszajelzes-hatasmeres', { waitUntil: 'networkidle0' });
+  await page.goto('https://staging.matekrefel.ro/test2', { waitUntil: 'networkidle0' });
   // Load your HTML and wait for assets
   //await page.setContent(html, { waitUntil: 'networkidle0' });
 
