@@ -49,7 +49,7 @@ app.get('/', async (req, res) => {
   //  "Content-Disposition": 'inline; filename="document.pdf"',
   //  "Content-Length": pdfBuffer.length,
   //});
-  res.end(pdfBuffer);
+  //res.end(pdfBuffer);
 });
 
 app.post('/generate-pdf', async (req, res) => {
