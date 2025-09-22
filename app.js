@@ -45,7 +45,7 @@ app.post('/generate-pdf', async (req, res) => {
   // Load your HTML and wait for assets
   await page.goto(url, { waitUntil: 'networkidle0' });
 
-  await page.waitForSelector('.ML__math', {timeout: 5000}).catch(() => {
+  await page.waitForSelector('.ML__math', {timeout: 1000}).catch(() => {
     console.warn("MathLive render element not detected; continuing anyway.");
   });
 
