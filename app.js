@@ -36,7 +36,10 @@ app.post('/generate-pdf', async (req, res) => {
   res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   const url = req.body;
 
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    browser: 'chrome',
+    protocol: 'webDriverBiDi', // CDP would be used by default for Chrome.
+  });
   const page = await browser.newPage();
 	
   // Load your HTML and wait for assets
