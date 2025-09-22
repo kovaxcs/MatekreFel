@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const express = require('express');
 const cors = require('cors');
+const PDFDocument = require('pdf-lib').PDFDocument;
 const app = express();
 app.use(express.text({type: '*/*', limit: '10mb'})); // receive raw HTML
 
@@ -24,32 +25,7 @@ app.use(cors({
 
 app.get('/', async (req, res) => { 
   console.log('get /');
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-
-  //const html = '<html><body><h1>Hello, world!</h1><p>This is a test PDF document.</p></body></html>';
-
-  await page.goto('https://staging.matekrefel.ro/test2', { waitUntil: 'networkidle0' });
-  // Load your HTML and wait for assets
-  //await page.setContent(html, { waitUntil: 'networkidle0' });
-
-  await page.waitForSelector('.ML__math', {timeout: 1000}).catch(() => {
-    console.warn("MathLive render element not detected; continuing anyway.");
-  });
-
-  // Generate PDF
-  const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
-  await browser.close();
-
-  //res.set({'Content-Type': 'application/pdf'});
-  //res.send(pdfBuffer);
-
-  res.writeHead(200, {
-    "Content-Type": "application/pdf",
-    "Content-Disposition": 'inline; filename="document.pdf"',
-    "Content-Length": pdfBuffer.length,
-  });
-  res.end(pdfBuffer);
+  res.send("Rest");
 });
 
 app.post('/generate-pdf', async (req, res) => {
@@ -74,12 +50,17 @@ app.post('/generate-pdf', async (req, res) => {
   const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
   await browser.close();
 
+  const pdfDoc = await PDFDocument.load(pdfBuffer);
+  pdfDoc.setTitle('Matekre fel! Teszt');
+  pdfDoc.setAuthor('Matekre fel!');
+  const updatedPdfBytes = await pdfDoc.save();
+
   res.writeHead(200, {
     "Content-Type": "application/pdf",
     "Content-Disposition": 'inline; filename="document.pdf"',
-    "Content-Length": pdfBuffer.length,
+    "Content-Length": updatedPdfBytes.length,
   });
-  res.end(pdfBuffer);
+  res.end(updatedPdfBytes);
 });
 
 app.listen(3000, () => console.log('API running on port 3000'));
