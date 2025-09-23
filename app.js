@@ -25,7 +25,7 @@ app.use(cors({
 
 app.get('/', async (req, res) => { 
   console.log('get /');
-  res.send("Rest");
+  res.send("Hello World");
 });
 
 app.post('/generate-pdf', async (req, res) => {
