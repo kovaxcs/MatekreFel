@@ -24,9 +24,72 @@ app.use(cors({
 }));
 
 app.get('/', async (req, res) => { 
-  console.log('get /');
-  res.send("Hello World");
-});
+  	console.log('get /');
+  	res.set('Access-Control-Allow-Origin', '*');
+	res.set('Access-Control-Allow-Credentials', true);
+	res.set('Access-Control-Allow-Methods', 'GET');
+	res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+	
+	let ngc_cert = req.query.cert;
+	if(ngc_cert){
+	
+		const URL = "https://www.ngccoin.com/certlookup/"+ngc_cert+"/";
+		const BROWSER_WS = "wss://brd-customer-hl_984bd47d-zone-scraping_browser2:as5o1uo4mf7m@brd.superproxy.io:9222";
+	
+		run(URL);
+	
+		async function run(url) {
+		console.log("Connecting to browser...");
+		const browser = await puppeteer.connect({
+			browserWSEndpoint: BROWSER_WS,
+		});
+		console.log("Connected! Navigate to site...");
+		const page = await browser.newPage();
+		await page.goto(url, { waitUntil: "domcontentloaded", timeout: 80000 });
+		console.log("Navigated! Waiting for popup...");
+		await close_popup(page);
+		console.log("Parsing data...");
+	
+		const inGrade = await page.evaluate(() => {
+		  const el = document.querySelector('.certlookup-stats li:nth-child(2) .certlookup-stats-item-content a:nth-child(2) > div');
+		  return el ? el.textContent.trim() : null;
+		});
+	
+		const data = await parse(page);
+			res.json({ data: data, inGrade: inGrade });
+		await browser.close();
+		}
+	
+		async function parse(page) {
+		return await page.evaluate(()=>{
+			return Array.from(document.querySelectorAll("ul.certlookup-stats li:nth-child(2)")).map(el => {
+			  return {
+				inGrade: document.querySelector(".certlookup-stats li:nth-child(2) .certlookup-stats-item-content a:nth-child(2) > div")?.innerText,
+				higherGrade: document.querySelector(".certlookup-stats li:nth-child(2) .certlookup-stats-item-content a:nth-child(3) > div")?.innerText,
+				obv: document.querySelector("body div.certlookup-details-wrapper .certlookup-images-item:nth-child(3) a")?.getAttribute('href'),
+				rev: document.querySelector("body div.certlookup-details-wrapper .certlookup-images-item:nth-child(4) a")?.getAttribute('href'),
+			  };
+			});
+		  });
+		}
+	
+		async function close_popup(page) {
+		  try {
+			const close_btn = await page.waitForSelector('body > div.email-signup.modal.ng-isolate-scope.modal-show > div.modal-dialog > div.modal-dialog-close.icon', { timeout: 35000, visible: true });
+			console.log("Popup appeared! Closing...");
+			await close_btn.click();
+			console.log("Popup closed!");
+		  } catch (e) {
+			console.log("Popup didn't appear.");
+		  }
+		}
+	
+	}
+	else{
+		res.send('Cert number is missing.'); 
+	}
+}) 
+
 
 app.post('/generate-pdf', async (req, res) => {
   console.log('generate-pdf post')
