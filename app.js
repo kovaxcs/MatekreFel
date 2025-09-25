@@ -90,6 +90,49 @@ app.get('/', async (req, res) => {
 	}
 }) 
 
+app.get('/generate-pdf', async (req, res) => {
+  console.log('generate-pdf get')
+  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Access-Control-Allow-Credentials', true);
+  res.set('Access-Control-Allow-Methods', 'POST');
+  res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  let url = req.query.url;
+  if(url){
+
+	  const browser = await puppeteer.launch({
+	    browser: 'chrome',
+	    protocol: 'webDriverBiDi', // CDP would be used by default for Chrome.
+	  });
+	  const page = await browser.newPage();
+		
+	  // Load your HTML and wait for assets
+	  await page.goto(url, { waitUntil: 'networkidle0' });
+	
+	  await page.waitForSelector('.ML__math', {timeout: 1000}).catch(() => {
+	    console.warn("MathLive render element not detected; continuing anyway.");
+	  });
+	
+	  // Generate PDF
+	  const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
+	  await browser.close();
+	
+	  const pdfDoc = await PDFDocument.load(pdfBuffer);
+	  pdfDoc.setTitle('Matekre fel! Teszt');
+	  pdfDoc.setAuthor('Matekre fel!');
+	  const updatedPdfBytes = await pdfDoc.save();
+	
+	  res.writeHead(200, {
+	    "Content-Type": "application/pdf",
+	    "Content-Disposition": 'inline; filename="document.pdf"',
+	    "Content-Length": updatedPdfBytes.length,
+	  });
+	  res.end(updatedPdfBytes);
+  }
+  else{
+	res.send('Url is missing.'); 
+  }
+});
 
 app.post('/generate-pdf', async (req, res) => {
   console.log('generate-pdf post')
