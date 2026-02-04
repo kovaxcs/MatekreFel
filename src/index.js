@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const PDFDocument = require('pdf-lib').PDFDocument;
 const app = express();
+const port = process.env.PORT || 8080;
 app.use(express.text({type: '*/*', limit: '10mb'})); // receive raw HTML
 
 app.use((req, res, next) => {
@@ -44,9 +45,16 @@ app.get('/generate-pdf', async (req, res) => {
     const browser = await puppeteer.launch({
         browser: 'chrome',
 		args: [
-	        '--no-sandbox',
-	        '--disable-setuid-sandbox'
-	    ]
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-gpu',
+            '--disable-extensions',
+            '--disable-software-rasterizer',
+            '--window-size=1280,800',
+            '--user-agent=GutenbergScraper/1.0 (+https://github.com/wadewegner/doappplat-puppeteer-sample) Chromium/120.0.0.0'
+                ],
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
         protocol: 'webDriverBiDi', // CDP would be used by default for Chrome.
     });
     const page = await browser.newPage();
@@ -68,9 +76,16 @@ app.post('/generate-pdf', async (req, res) => {
   const browser = await puppeteer.launch({
     browser: 'chrome',
     args: [
-	  '--no-sandbox',
-      '--disable-setuid-sandbox'
-    ]
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--disable-extensions',
+        '--disable-software-rasterizer',
+        '--window-size=1280,800',
+        '--user-agent=GutenbergScraper/1.0 (+https://github.com/wadewegner/doappplat-puppeteer-sample) Chromium/120.0.0.0'
+            ],
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
     protocol: 'webDriverBiDi', // CDP would be used by default for Chrome.
   });
   const page = await browser.newPage();
@@ -100,4 +115,7 @@ app.post('/generate-pdf', async (req, res) => {
   res.end(updatedPdfBytes);
 });
 
-app.listen(3000, () => console.log('API running on port 3000'));
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server starting on port ${port}`);
+    console.log(`Environment: ${process.env.NODE_ENV}`);
+}); 
