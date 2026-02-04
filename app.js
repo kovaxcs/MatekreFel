@@ -43,6 +43,10 @@ app.get('/generate-pdf', async (req, res) => {
 	
     const browser = await puppeteer.launch({
         browser: 'chrome',
+		args: [
+	        '--no-sandbox',
+	        '--disable-setuid-sandbox'
+	    ]
         protocol: 'webDriverBiDi', // CDP would be used by default for Chrome.
     });
     const page = await browser.newPage();
@@ -63,6 +67,10 @@ app.post('/generate-pdf', async (req, res) => {
 
   const browser = await puppeteer.launch({
     browser: 'chrome',
+    args: [
+	  '--no-sandbox',
+      '--disable-setuid-sandbox'
+    ]
     protocol: 'webDriverBiDi', // CDP would be used by default for Chrome.
   });
   const page = await browser.newPage();
