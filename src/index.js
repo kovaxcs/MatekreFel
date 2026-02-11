@@ -44,18 +44,7 @@ app.get('/generate-pdf', async (req, res) => {
 	
     const browser = await puppeteer.launch({
         browser: 'chrome',
-		args: [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage',
-            '--disable-gpu',
-            '--disable-extensions',
-            '--disable-software-rasterizer',
-            '--window-size=1280,800',
-            '--user-agent=GutenbergScraper/1.0 (+https://github.com/wadewegner/doappplat-puppeteer-sample) Chromium/120.0.0.0'
-                ],
-            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
-        protocol: 'webDriverBiDi', // CDP would be used by default for Chrome.
+    	protocol: 'webDriverBiDi', // CDP would be used by default for Chrome.
     });
     const page = await browser.newPage();
 
@@ -74,18 +63,7 @@ app.post('/generate-pdf', async (req, res) => {
   const url = req.body;
 
   const browser = await puppeteer.launch({
-    browser: 'chrome',
-    args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu',
-        '--disable-extensions',
-        '--disable-software-rasterizer',
-        '--window-size=1280,800',
-        '--user-agent=GutenbergScraper/1.0 (+https://github.com/wadewegner/doappplat-puppeteer-sample) Chromium/120.0.0.0'
-            ],
-        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
+	browser: 'chrome',
     protocol: 'webDriverBiDi', // CDP would be used by default for Chrome.
   });
   const page = await browser.newPage();
